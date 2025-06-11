@@ -1,0 +1,78 @@
+<div class="min-h-screen flex flex-col items-center justify-center bg-[#990000]">
+  <!-- Logo -->
+  <div class="flex justify-center items-center mb-6 mt-4">
+    <img src="assets/images/logo.png" alt="RJ Sofás & Móveis" class="h-12 md:h-16" />
+  </div>
+
+  <!-- Card -->
+  <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
+    
+    <!-- Cabeçalho com botão VOLTAR -->
+    <div class="flex justify-between items-center mb-4" *ngIf="pedido">
+      <button (click)="pedido = null; erro = '';" 
+              class="bg-[#A40000] text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out hover:bg-[#b30000] hover:scale-105 active:scale-95 active:bg-[#7d0000]">
+        VOLTAR
+      </button>
+      <span class="text-white font-bold" style="color:#A40000;">Pedido: {{ pedido?.codigo }}</span>
+    </div>
+
+    <!-- Formulário -->
+    <div *ngIf="!pedido">
+      <h1 class="text-xl font-bold text-center mb-4 text-[#990000]">Rastrear Pedido</h1>
+      
+      <input [(ngModel)]="codigo" placeholder="Digite o código" 
+             class="w-full p-2 border border-[#A40000] rounded mb-2" />
+      
+      <button (click)="buscarPedido()" 
+              class="w-full bg-[#A40000] text-white py-2 px-4 rounded font-bold flex items-center justify-center gap-2 shadow transition duration-300 ease-in-out hover:bg-[#b30000] hover:scale-105 active:scale-95 active:bg-[#7d0000]">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-4.35-4.35M16.65 16.65A7 7 0 1116.65 2a7 7 0 010 14z" />
+        </svg>
+        Buscar Pedido
+      </button>
+
+      <!-- Mensagem de erro -->
+      <div *ngIf="erro" class="text-red-600 text-center mt-2">{{ erro }}</div>
+
+      <!-- Ajuda com WhatsApp -->
+      <div class="mt-6 text-center">
+        <p class="text-gray-600 font-semibold mb-1">Algum problema para encontrar seu pedido?</p>
+        <a href="https://wa.me/999999999" target="_blank" class="text-blue-600 underline">Entre em contato</a>
+      </div>
+
+      <!-- Botão flutuante WhatsApp -->
+      <div class="fixed bottom-6 right-6">
+        <a href="https://wa.me/999999999" target="_blank">
+          <img src="assets/icons/whatsapp.png" alt="WhatsApp" class="w-14 h-14" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Detalhes do pedido -->
+    <div *ngIf="pedido">
+      <div class="mb-2">
+        <div class="font-bold text-[#990000]">Cliente:</div>
+        <div>{{ pedido.cliente }}</div>
+
+        <div class="font-bold text-[#990000] mt-2">Endereço de entrega:</div>
+        <div>{{ pedido.enderecoEntrega }}</div>
+
+        <div class="font-bold text-[#990000] mt-2">Item(s):</div>
+        <div>{{ pedido.itens }}</div>
+
+        <div class="font-bold text-[#990000] mt-2">Qtd:</div>
+        <div>{{ pedido.quantidade }}</div>
+      </div>
+
+      <!-- Histórico de status -->
+      <div class="mt-4 flex flex-col items-center">
+        <div *ngFor="let status of pedido.statusHistorico; let i = index" class="flex flex-col items-center mb-4">
+          <img [src]="getIconPath(status.icone)" class="w-16 h-16 mb-1" />
+          <div class="text-center font-bold text-lg">{{ status.status }}</div>
+          <div class="text-center text-gray-500 text-sm">{{ status.dataHora | date:'dd/MM/yyyy HH:mm' }}</div>
+          <div *ngIf="i < pedido.statusHistorico.length - 1" class="h-8 w-1 bg-[#990000] my-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
