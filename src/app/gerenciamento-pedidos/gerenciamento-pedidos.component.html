@@ -1,0 +1,128 @@
+<div class="pedidos-page">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <a routerLink="/gerenciamento">
+        <button class="bg-[#A40000] text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out hover:bg-[#b30000] hover:scale-105 active:scale-95 active:bg-[#7d0000]">
+          VOLTAR</button>
+      </a>
+      <h1>Gerenciamento de Pedidos</h1>
+    </div>
+  
+    <!-- Barra superior -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+
+      <input
+        type="text"
+        [(ngModel)]="filtroTermo"
+        (ngModelChange)="aplicarFiltro()"
+        placeholder="Buscar por código ou cliente"
+        class="w-full md:w-80 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[#A40000]"
+      />
+    </div>
+
+    <!-- Mensagem de Sucesso -->
+    <div *ngIf="successMessage" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+      <p>{{ successMessage }}</p>
+    </div>
+  
+    <!-- Tabela de Pedidos -->
+    <div class="table-wrapper">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Código</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Endereço de Entrega</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Itens</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantidade</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Motorista</th>
+            <th class="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="py-3 px-6 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let pedido of pedidosFiltrados" class="hover:bg-gray-50">
+            <td class="py-4 px-6 text-sm font-medium text-gray-900">{{ pedido.codigo }}</td>
+            <td class="py-4 px-6 text-sm text-gray-500">{{ pedido.cliente }}</td>
+            <td class="py-4 px-6 text-sm text-gray-500">{{ pedido.enderecoEntrega }}</td>
+            <td class="py-4 px-6 text-sm text-gray-500">{{ pedido.itens }}</td>
+            <td class="py-4 px-6 text-sm text-gray-500">{{ pedido.quantidade }}</td>
+            <td class="py-4 px-6 text-sm text-gray-500">
+              <span [ngClass]="{'text-green-600 font-semibold': pedido.motorista, 'text-red-500': !pedido.motorista}">
+                {{ pedido.motorista?.nomeCompleto || 'Não atribuído' }}
+              </span>
+            </td>
+            <td class="py-4 px-6 text-sm text-gray-500">
+              {{ ultimoStatus(pedido) }}
+            </td>
+            <td class="py-4 px-6 text-center">
+              <div class="flex flex-col gap-2 items-center">
+                <button
+                  (click)="abrirModal(pedido)"
+                  [disabled]="!podeAtribuir(pedido)"
+                  class="bg-[#a00000] hover:bg-[#800000] disabled:bg-gray-300 disabled:text-gray-500 text-white font-bold py-2 px-4 rounded-lg transition w-28">
+                  Atribuir
+                </button>
+                <button
+                  *ngIf="podeRemover(pedido)"
+                  (click)="removerMotorista(pedido)"
+                  class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition w-28">
+                  Remover
+                </button>
+                <button
+                  *ngIf="podeResetar(pedido)"
+                  (click)="resetarStatus(pedido)"
+                  class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition w-28">
+                  Resetar
+                </button>
+                <div class="flex flex-col gap-2 w-full">
+                  <select
+                    [(ngModel)]="statusSelecionadoAdmin[pedido.codigo]"
+                    class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#A40000]"
+                  >
+                    <option [ngValue]="null" disabled>Selecionar status</option>
+                    <option *ngFor="let status of statusOpcoesAdmin" [ngValue]="status">
+                      {{ status }}
+                    </option>
+                  </select>
+                  <button
+                    class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded-lg transition"
+                    [disabled]="!statusSelecionadoAdmin[pedido.codigo]"
+                    (click)="atualizarStatusAdmin(pedido)"
+                  >
+                    Atualizar status
+                  </button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Modal de Atribuição -->
+    <div *ngIf="mostrarModal" class="fixed inset-0 z-50 bg-black bg-opacity-60 flex items-center justify-center">
+      <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">Atribuir Motorista</h2>
+        <p class="mb-6 text-gray-600">Pedido: <span class="font-semibold">{{ pedidoSelecionado?.codigo }}</span></p>
+        
+        <div class="mb-6">
+          <label for="motorista" class="block text-sm font-medium text-gray-700 mb-2">Motoristas disponíveis</label>
+          <select id="motorista" [(ngModel)]="motoristaSelecionadoId" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-[#a00000] focus:border-[#a00000] sm:text-sm">
+            <option [ngValue]="null" disabled>Selecione um motorista</option>
+            <option *ngFor="let motorista of motoristas" [value]="motorista.id">{{ motorista.nomeCompleto }}</option>
+          </select>
+        </div>
+  
+        <div class="flex justify-end space-x-4">
+          <button (click)="fecharModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg">
+            Cancelar
+          </button>
+          <button (click)="salvarAtribuicao()" [disabled]="!motoristaSelecionadoId" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-gray-400">
+            Salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

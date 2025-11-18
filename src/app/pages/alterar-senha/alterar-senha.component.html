@@ -1,0 +1,27 @@
+<div class="alterar-senha-page">
+  <div class="card">
+    <h1>Trocar Senha</h1>
+    <p class="subtitle">Defina uma nova senha para continuar utilizando o sistema.</p>
+
+    <form (ngSubmit)="salvar()" class="form">
+      <label>
+        Senha atual
+        <input type="password" [(ngModel)]="senhaAtual" name="senhaAtual" required />
+      </label>
+      <label>
+        Nova senha
+        <input type="password" [(ngModel)]="novaSenha" name="novaSenha" required />
+      </label>
+      <label>
+        Confirmar senha
+        <input type="password" [(ngModel)]="confirmarSenha" name="confirmarSenha" required />
+      </label>
+
+      <button type="submit">Salvar</button>
+    </form>
+
+    <div *ngIf="mensagem" class="msg success">{{ mensagem }}</div>
+    <div *ngIf="erro" class="msg error">{{ erro }}</div>
+  </div>
+</div>
+

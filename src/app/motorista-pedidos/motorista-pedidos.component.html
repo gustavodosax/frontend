@@ -1,0 +1,101 @@
+<div class="motorista-page">
+  <div class="page-wrapper">
+    <div class="page-header">
+      <a routerLink="/gerenciamento">
+        <button class="btn-voltar">Voltar</button>
+      </a>
+      <div>
+        <h1>Pedidos do Motorista</h1>
+        <p *ngIf="usuario">Motorista: {{ usuario.nomeCompleto }} · Matrícula: {{ usuario.matricula }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="estado texto-neutro">Carregando pedidos...</div>
+    <div *ngIf="!loading && pedidos.length === 0" class="estado texto-neutro">
+      Nenhum pedido atribuído para você no momento.
+    </div>
+
+    <div *ngIf="error" class="alerta erro">{{ error }}</div>
+    <div *ngIf="sucesso" class="alerta sucesso">{{ sucesso }}</div>
+
+    <div class="cards-wrapper" *ngIf="!loading && pedidos.length > 0">
+      <div class="pedido-card" *ngFor="let pedido of pedidos">
+        <div class="card-head">
+          <div>
+            <span class="codigo">Pedido #{{ pedido.codigo }}</span>
+            <div class="status-atual" [ngClass]="{'status-final': finais.includes(ultimoStatus(pedido))}">
+              {{ ultimoStatus(pedido) }}
+            </div>
+          </div>
+          <div class="quantidade">
+            <span>Quantidade</span>
+            <strong>{{ pedido.quantidade }}</strong>
+          </div>
+        </div>
+
+        <div class="card-info">
+          <div>
+            <span class="label">Cliente</span>
+            <p>{{ pedido.cliente }}</p>
+          </div>
+          <div>
+            <span class="label">Telefone</span>
+            <p>{{ pedido.telefoneCliente }}</p>
+          </div>
+          <div>
+            <span class="label">Endereço</span>
+            <p>{{ pedido.enderecoEntrega }}</p>
+          </div>
+          <div>
+            <span class="label">Itens</span>
+            <p>{{ pedido.itens }}</p>
+          </div>
+        </div>
+
+        <div class="card-acoes" *ngIf="proximosStatus(pedido).length > 0">
+          <span class="label">Atualizar status</span>
+          <div class="acoes">
+            <button
+              *ngFor="let status of proximosStatus(pedido)"
+              (click)="atualizarStatus(pedido, status)"
+              class="acao-btn"
+            >
+              {{ status }}
+            </button>
+          </div>
+        </div>
+
+        <div class="card-reverter">
+          <span class="label">Rever status</span>
+          <div class="reverter-controls">
+            <select [(ngModel)]="statusSelecionado[pedido.codigo]">
+              <option [ngValue]="null" disabled>Escolha um status</option>
+              <option *ngFor="let status of statusOpcoes" [ngValue]="status">
+                {{ status }}
+              </option>
+            </select>
+            <button class="acao-btn aplicar"
+              (click)="atualizarStatusManual(pedido)"
+              [disabled]="!statusSelecionado[pedido.codigo]">
+              Aplicar
+            </button>
+          </div>
+        </div>
+
+        <div class="card-timeline" *ngIf="pedido.statusHistorico?.length">
+          <span class="label">Linha do tempo</span>
+          <div class="timeline">
+            <div class="timeline-item" *ngFor="let status of ordenarHistorico(pedido.statusHistorico)">
+              <div class="bullet"></div>
+              <div>
+                <div class="titulo">{{ status.status }}</div>
+                <div class="data">{{ status.dataHora | date:'dd/MM/yyyy HH:mm' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

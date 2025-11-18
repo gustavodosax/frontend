@@ -6,39 +6,54 @@
   
     <!-- Card com os botões -->
     <div class="w-full max-w-sm bg-white rounded-xl shadow-lg p-6 text-[#a00000]">
-      <h1 class="text-xl font-bold text-center mb-6">Gerenciamento</h1>
-  
-      <a
-        routerLink="/usuarios"
-        class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
-      >
-        <i class="fas fa-user text-lg"></i>
-        <span>Novo Usuário</span>
-      </a>
-  
-      <a
-        routerLink="/perfis"
-        class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
-      >
-        <i class="fas fa-users text-lg"></i>
-        <span>Perfis</span>
-      </a>
-  
-      <a
-        routerLink="/pedidos"
-        class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
-      >
-        <i class="fas fa-box text-lg"></i>
-        <span>Pedidos</span>
-      </a>
+      <h1 class="text-xl font-bold text-center mb-2">Gerenciamento</h1>
+      <h2 class="text-sm font-bold text-center mb-2">Olá {{ usuario?.nomeCompleto }}</h2>
+      <h2 class="text-sm font-bold text-center mb-2">Perfil: {{ usuario?.perfil }}</h2>
+      <h2 class="text-sm font-bold text-center mb-2">Matrícula: {{ usuario?.matricula }}</h2>
 
-      <a
-      routerLink="/pedidos"
-      class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
-    >
-      <i class="fas fa-truck text-lg"></i>
-      <span>Novo Veículo</span>
-    </a>
+      <ng-container *ngIf="usuario?.perfil === 'Motorista'; else adminLinks">
+        <a
+          routerLink="/motorista/pedidos"
+          class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
+        >
+          <i class="fas fa-clipboard-list text-lg"></i>
+          <span>Meus Pedidos</span>
+        </a>
+      </ng-container>
+
+      <ng-template #adminLinks>
+        <a
+          routerLink="/usuarios"
+          class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
+        >
+          <i class="fas fa-user text-lg"></i>
+          <span>Novo Usuário</span>
+        </a>
+    
+        <a
+          routerLink="/perfis"
+          class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
+        >
+          <i class="fas fa-users text-lg"></i>
+          <span>Perfis</span>
+        </a>
+    
+        <a
+          routerLink="/pedidos"
+          class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
+        >
+          <i class="fas fa-box text-lg"></i>
+          <span>Pedidos</span>
+        </a>
+  
+        <a
+        routerLink="/veiculo"
+        class="flex items-center space-x-2 bg-[#5a2b2b] hover:bg-[#4a1f1f] text-white font-semibold py-3 px-4 rounded-lg transition w-full mb-4"
+      >
+        <i class="fas fa-truck text-lg"></i>
+        <span>Novo Veículo</span>
+      </a>
+      </ng-template>
  
       <!-- Botão de Logout -->
       <button

@@ -1,0 +1,87 @@
+:host {
+  display: block;
+  font-family: 'Inter', sans-serif;
+}
+
+.pedidos-page {
+  min-height: 100vh;
+  background: #a00000;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.page-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #a00000;
+  }
+}
+
+.btn-voltar {
+  background: #a00000;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    background: #7a0000;
+  }
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px #f0f0f0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  td {
+    vertical-align: top;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 1.5rem;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+

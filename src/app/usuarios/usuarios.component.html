@@ -1,5 +1,10 @@
 <div class="min-h-screen flex flex-col items-center justify-center bg-[#a00000] px-4">
   <div class="w-full max-w-md bg-white rounded-xl shadow-lg p-6 text-[#a00000]">
+    <a routerLink="/gerenciamento">
+      <button class="bg-[#A40000] text-white font-bold py-2 px-4 rounded shadow transition duration-300 ease-in-out hover:bg-[#b30000] hover:scale-105 active:scale-95 active:bg-[#7d0000]">
+        VOLTAR
+      </button>
+    </a>
     <h1 class="text-xl font-bold text-center mb-6">{{ editando ? 'Editar Usuário' : 'Novo Usuário' }}</h1>
     <form (ngSubmit)="criarOuAtualizarUsuario()" #usuarioForm="ngForm" class="space-y-4">
       <div>
@@ -17,6 +22,11 @@
           <option value="Administrativo">Administrativo</option>
           <option value="Logística">Logística</option>
         </select>
+      </div>
+      <div class="flex items-center gap-2">
+        <input id="trocarSenha" type="checkbox" name="trocarSenha" [(ngModel)]="usuario.trocarSenhaPrimeiroLogin"
+          class="w-4 h-4 border border-[#a00000] rounded focus:ring-[#a00000]" />
+        <label for="trocarSenha" class="font-semibold">Trocar senha no primeiro login</label>
       </div>
       <div>
         <label for="senha" class="block font-semibold mb-1">Senha:</label>
